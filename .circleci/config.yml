@@ -20,6 +20,8 @@ jobs:
             - ~/.cache/yarn
       - run:
           command: cd client && yarn test
+
+
   # Second-Job:
   #   docker:
   #     - image: alpine:3.7
@@ -46,3 +48,23 @@ jobs:
   #         name: Approval Complete
   #         command: |
   #           echo 'Do work once the approval has completed'
+
+workflows:
+  version: 2
+    Example_Workflow:
+      jobs:
+        - Client-Test
+        # - Second-Job:
+        #     requires:
+        #       - First-Job
+        # - Run-With-Node:
+        #     requires:
+        #       - First-Job
+        # - Hold-For-Approval:
+        #     type: approval
+        #     requires:
+        #       - Run-With-Node
+        #       - Second-Job
+        # - Now-Complete:
+        #     requires:
+        #       - Hold-For-Approval
