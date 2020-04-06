@@ -1,8 +1,44 @@
-version: 2.1 # Version of YamL
-jobs: # Jobs run in different containers
-  build: # First job
-    docker: # We use docker
-      - image: circleci/node:latest # docker image
-    steps: # All the thinks to do in this container
-      - checkout # Mandatory step to get all the source code
-      - run: echo "Hello Stackerine" # First command
+version: 2.1
+jobs:
+  Client-Test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run: curl -o- -L https://yarnpkg.com/install.sh | bash
+      - restore_cache:
+        name: Restore Yarn Package Cache
+        keys:
+          - client-yarn-packages-{{ checksum "client/yarn.lock" }}
+      - run: cd client && yarn install --frozen-lockfile
+      - save_cache:
+        name: Save Yarn Package Cache
+        key: client-yarn-packages-{{ checksum "client/yarn.lock" }}
+        paths:
+          - ~/.cache/yarn
+      - run: client && yarn test
+  # Second-Job:
+  #   docker:
+  #     - image: alpine:3.7
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Code Has Arrived
+  #         command: |
+  #           ls -al
+  #           echo 'Simple job'
+  # Run-With-Node:
+  #   docker:
+  #     - image: circleci/node:latest
+  #   steps:
+  #     - run:
+  #         name: Running In A Container With Node
+  #         command: |
+  #           node -v
+  # Now-Complete:
+  #   docker:
+  #     - image: alpine:3.7
+  #   steps:
+  #     - run:
+  #         name: Approval Complete
+  #         command: |
+  #           echo 'Do work once the approval has completed'
