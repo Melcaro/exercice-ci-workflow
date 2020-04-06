@@ -20,16 +20,29 @@ jobs:
             - ~/.cache/yarn
       - run:
           command: cd client && yarn test
-  # Second-Job:
-  #   docker:
-  #     - image: alpine:3.7
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Code Has Arrived
-  #         command: |
-  #           ls -al
-  #           echo 'Simple job'
+  Server-Test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          command: curl -o- -L https://yarnpkg.com/install.sh | bash
+      - restore_cache:
+          name: Restore Yarn Package Cache in Server
+          keys:
+              - server-yarn-packages-{{ checksum "server/yarn.lock" }}
+        - run:
+            command: cd server && yarn install --frozen-lockfile
+        - save_cache:
+            name: Save Yarn Package Cache in Server
+            key: server-yarn-packages-{{ checksum "server/yarn.lock" }}
+            paths:
+              - ~/.cache/yarn
+        - run:
+            command: cd server && yarn test
+
+        
+
   # Run-With-Node:
   #   docker:
   #     - image: circleci/node:latest
@@ -52,6 +65,7 @@ workflows:
   Example_Workflow:
     jobs:
       - Client-Test
+      - Server-Test
         # - Second-Job:
         #     requires:
         #       - First-Job
