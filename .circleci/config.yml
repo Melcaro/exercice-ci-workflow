@@ -5,7 +5,8 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - command: curl -o- -L https://yarnpkg.com/install.sh | bash
+      - run:
+          command: curl -o- -L https://yarnpkg.com/install.sh | bash
       - restore_cache:
         name: Restore Yarn Package Cache
         keys:
