@@ -19,7 +19,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - run:
-          command: - cd client && yarn test
+          command: cd client && yarn test
   # Second-Job:
   #   docker:
   #     - image: alpine:3.7
