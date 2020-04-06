@@ -20,8 +20,6 @@ jobs:
             - ~/.cache/yarn
       - run:
           command: cd client && yarn test
-
-
   # Second-Job:
   #   docker:
   #     - image: alpine:3.7
@@ -51,9 +49,9 @@ jobs:
 
 workflows:
   version: 2
-    Example_Workflow:
-      jobs:
-        - Client-Test
+  Example_Workflow:
+    jobs:
+      - Client-Test
         # - Second-Job:
         #     requires:
         #       - First-Job
