@@ -55,4 +55,9 @@ workflows:
     jobs:
       - Client-Test
       - Server-Test
+      - Validation:
+        type: approval
+        requires:
+          - Client-Test
+          - Server-Test
       - Deploy
