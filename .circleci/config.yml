@@ -60,4 +60,6 @@ workflows:
           requires:
             - Client-Test
             - Server-Test
-      - Deploy
+      - Deploy:
+          requires:
+            - Validation
