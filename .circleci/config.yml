@@ -40,23 +40,14 @@ jobs:
             - ~/.cache/yarn
       - run:
           command: cd server && yarn test
-
-  # Run-With-Node:
-  #   docker:
-  #     - image: circleci/node:latest
-  #   steps:
-  #     - run:
-  #         name: Running In A Container With Node
-  #         command: |
-  #           node -v
-  # Now-Complete:
-  #   docker:
-  #     - image: alpine:3.7
-  #   steps:
-  #     - run:
-  #         name: Approval Complete
-  #         command: |
-  #           echo 'Do work once the approval has completed'
+  Deploy:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: push on Heroku
+          command: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP.git master
 
 workflows:
   version: 2
@@ -64,17 +55,4 @@ workflows:
     jobs:
       - Client-Test
       - Server-Test
-        # - Second-Job:
-        #     requires:
-        #       - First-Job
-        # - Run-With-Node:
-        #     requires:
-        #       - First-Job
-        # - Hold-For-Approval:
-        #     type: approval
-        #     requires:
-        #       - Run-With-Node
-        #       - Second-Job
-        # - Now-Complete:
-        #     requires:
-        #       - Hold-For-Approval
+      - Deploy
